@@ -1,0 +1,41 @@
+﻿<nav class="navbar navbar-expand-lg navbar-light bg-light">
+
+    <NavLink class="navbar-brand" href="/">HybridBlazor</NavLink>
+
+    <button @onclick="_ => ShowMenu = !ShowMenu" class="navbar-toggler" type="button">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse @(ShowMenu ? "show" : "")" id="navbarNav">
+        <ul class="navbar-nav w-100">
+
+            <li class="nav-item @GetActive("", NavLinkMatch.All)">
+                <NavLink class="nav-link" href="/" Match="NavLinkMatch.All">Home</NavLink>
+            </li>
+            <li class="nav-item @GetActive("/counter")">
+                <NavLink class="nav-link" href="/counter">Counter</NavLink>
+            </li>
+            <li class="nav-item @GetActive("/fetchdata")">
+                <NavLink class="nav-link" href="/fetchdata">Fetch</NavLink>
+            </li>
+
+            <LoginDisplay Small="ShowMenu" />
+        </ul>
+    </div>
+</nav>
+
+@code{
+    [Inject] NavigationManager NavigationManager { get; set; }
+
+    private bool ShowMenu { get; set; }
+
+    protected override void OnInitialized() => NavigationManager.LocationChanged += (s, e) => StateHasChanged();
+
+    bool IsActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix)
+    {
+        var relativePath = NavigationManager.ToBaseRelativePath(NavigationManager.Uri).ToLower();
+        return navLinkMatch == NavLinkMatch.All ? relativePath == href.ToLower() : relativePath.StartsWith(href.ToLower());
+    }
+
+    string GetActive(string href, NavLinkMatch navLinkMatch = NavLinkMatch.Prefix) => IsActive(href, navLinkMatch) ? "active" : "";
+}

@@ -1,0 +1,58 @@
+﻿@page "/counter"
+
+@implements IDisposable
+
+@using System.Linq;
+@using System.Threading
+@using System.Reactive.Linq;
+
+<h1>Counter</h1>
+
+<p>Current count: @State?.Count</p>
+
+<button class="btn btn-primary" @onclick="CounterService.Increment">Increment</button>
+<button class="btn btn-primary" @onclick="CounterService.Decrement">Decrement</button>
+
+<h4 class="mt-2 mb-2">Exception handling</h4>
+
+<button class="btn mb-2 btn-warning" @onclick="ThrowException">Throw Exception</button>
+
+<pre>@ExceptionInfo</pre>
+
+@code {
+    [Inject] ICounterService CounterService { get; set; }
+
+    private CounterState State { get; set; }
+    private IDisposable StateSubscription { get; set; }
+
+    private string ExceptionInfo { get; set; }
+
+    protected override void OnInitialized()
+    {
+        var asyncState = CounterService.SubscribeAsync();
+        var state = asyncState.ToObservable();
+
+        StateSubscription = state.Subscribe(async state =>
+        {
+            State = state;
+            await InvokeAsync(() => StateHasChanged());
+        });
+    }
+
+    private async Task ThrowException()
+    {
+        try
+        {
+            await CounterService.ThrowException();
+        }
+        catch (Grpc.Core.RpcException ex)
+        {
+            ExceptionInfo = $"RpcException: {ex.Status}";
+        }
+    }
+
+    public void Dispose()
+    {
+        StateSubscription?.Dispose();
+    }
+}

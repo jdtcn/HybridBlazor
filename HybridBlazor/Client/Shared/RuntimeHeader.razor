@@ -1,0 +1,57 @@
+﻿<nav aria-label="breadcrumb">
+    <ol class="breadcrumb" style="border-radius: 0;">
+        <li class="breadcrumb-item active">
+            <span>Runtime: <b>@Runtime</b>, HybridType: <i>@HybridType</i></span>
+            @if (HybridType?.StartsWith("Hybrid") == true)
+            {
+                <a class="ml-2" @onclick="SwitchMode">Switch runtime</a>
+            }
+        </li>
+    </ol>
+</nav>
+
+@code{
+    [Inject] IJSRuntime JSRuntime { get; set; }
+    [Inject] NavigationManager NavManager { get; set; }
+
+    private string Runtime => System.Runtime.InteropServices.RuntimeInformation.RuntimeIdentifier;
+    private string HybridType { get; set; }
+
+    protected override async Task OnAfterRenderAsync(bool firstRender)
+    {
+        if (!firstRender) return;
+
+        HybridType = await JSRuntime.InvokeAsync<string>("getHybridType");
+        StateHasChanged();
+
+        if (HybridType?.StartsWith("Hybrid") != true) return;
+
+        if (Runtime == "browser-wasm")
+        {
+            await JSRuntime.InvokeVoidAsync("wasmReady");
+        }
+
+        EventHandler<LocationChangedEventArgs> switchFunc = null;
+        switchFunc = async (_, e) =>
+        {
+            var canUnsubscribe = await JSRuntime.InvokeAsync<bool>("switchToWasm", e.Location);
+            if (canUnsubscribe)
+            {
+                NavManager.LocationChanged -= switchFunc;
+            }
+        };
+        NavManager.LocationChanged += switchFunc;
+    }
+
+    private async Task SwitchMode()
+    {
+        if (Runtime == "browser-wasm")
+        {
+            NavManager.NavigateTo(NavManager.Uri, forceLoad: true);
+        }
+        else
+        {
+            await JSRuntime.InvokeVoidAsync("switchToWasm", string.Empty, true);
+        }
+    }
+}

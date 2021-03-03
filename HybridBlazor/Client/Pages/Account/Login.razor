@@ -1,0 +1,131 @@
+﻿@page "/login"
+
+@using System.Web
+@using System.Linq.Expressions
+@using System.Collections.Specialized
+@using Microsoft.AspNetCore.Components
+
+<div class="row">
+    <div class="col-12 d-flex justify-content-center">
+        <div class="card" style="width: 550px;">
+            <div class="card-body">
+                <h1 class="mb-5 h2 font-weight-normal login-title text-center">
+                    Login
+                </h1>
+
+                <EditForm Model="@loginModel" OnValidSubmit="OnSubmit">
+
+                    <FluentValidator />
+
+                    @if (!string.IsNullOrEmpty(error))
+                    {
+                        <div class="alert alert-danger">@error</div>
+                    }
+
+                    @if (context.GetValidationMessages().Count() > 0)
+                    {
+                        <div class="alert alert-danger" role="alert">
+                            <ValidationSummary />
+                        </div>
+                    }
+
+                    <div class="form-group @(IsInvalid(context, () => loginModel.UserName) ? "is-invalid" : "")">
+                        <label>User name</label>
+                        <div class="input-group mb-2 @(IsInvalid(context, () => loginModel.UserName) ? "is-invalid" : "")">
+                            <div class="input-group-prepend">
+                                <div class="input-group-text">@@</div>
+                            </div>
+                            <InputText @bind-Value="loginModel.UserName"
+                                       class="@(IsInvalid(context, () => loginModel.UserName) ? "form-control is-invalid" : "form-control")"
+                                       placeholder="User name" type="text" />
+                        </div>
+                        @if (IsInvalid(context, () => loginModel.UserName))
+                        {
+                            <div class="invalid-feedback"><ValidationMessage For="() => loginModel.UserName" /></div>
+                        }
+                    </div>
+
+                    <div class="form-group @(IsInvalid(context, () => loginModel.Password) ? "is-invalid" : "")">
+                        <label>Password</label>
+                        <InputText @bind-Value="loginModel.Password"
+                                   class="@(IsInvalid(context, () => loginModel.Password) ? "form-control is-invalid" : "form-control")"
+                                   placeholder="Password" type="password" />
+                        @if (IsInvalid(context, () => loginModel.Password))
+                        {
+                            <div class="invalid-feedback"><ValidationMessage For="() => loginModel.Password" /></div>
+                        }
+                    </div>
+
+                    <div class="form-group">
+                        <label>
+                            <InputCheckbox @bind-Value="loginModel.RememberMe">Remember me</InputCheckbox>
+                            Remember me
+                        </label>
+                    </div>
+
+                    <div class="d-flex justify-content-center">
+                        <button class="btn btn-primary btn-xs" type="submit">
+                            Sign in
+                        </button>
+                    </div>
+
+                </EditForm>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code{
+    [Inject] NavigationManager NavigationManager { get; set; }
+    [Inject] HostAuthenticationStateProvider AuthStateProvider { get; set; }
+
+    LoginRequest loginModel { get; set; } = new LoginRequest();
+    string error { get; set; }
+    bool loading = false;
+
+    protected override void OnInitialized()
+    {
+        loginModel.UserName = QueryString("userName");
+    }
+
+    private bool IsInvalid(EditContext context, Expression<Func<object>> accessor)
+    {
+        return context.GetValidationMessages(accessor).Count() > 0;
+    }
+
+    async Task OnSubmit()
+    {
+        loading = true;
+        await Task.Yield();
+
+        error = null;
+        try
+        {
+            var returnUrl = QueryString("returnUrl");
+            var loginData = await AuthStateProvider.Login(loginModel, returnUrl);
+            if (!string.IsNullOrEmpty(loginData))
+            {
+                NavigationManager.NavigateTo("/signInActual?t=" + Uri.EscapeDataString(loginData), forceLoad: true);
+            }
+            else
+            {
+                NavigationManager.NavigateTo(returnUrl ?? string.Empty);
+            }
+        }
+        catch (Exception ex)
+        {
+            error = ex.Message;
+        }
+        loading = false;
+    }
+
+    public NameValueCollection QueryString()
+    {
+        return HttpUtility.ParseQueryString(new Uri(NavigationManager.Uri).Query);
+    }
+
+    public string QueryString(string key)
+    {
+        return QueryString()[key];
+    }
+}
