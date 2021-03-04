@@ -34,10 +34,17 @@
         EventHandler<LocationChangedEventArgs> switchFunc = null;
         switchFunc = async (_, e) =>
         {
-            var canUnsubscribe = await JSRuntime.InvokeAsync<bool>("switchToWasm", e.Location);
-            if (canUnsubscribe)
+            try
             {
-                NavManager.LocationChanged -= switchFunc;
+                var canUnsubscribe = await JSRuntime.InvokeAsync<bool>("switchToWasm", e.Location);
+                if (canUnsubscribe)
+                {
+                    NavManager.LocationChanged -= switchFunc;
+                }
+            }
+            catch (TaskCanceledException)
+            {
+                // Ignore this exception
             }
         };
         NavManager.LocationChanged += switchFunc;

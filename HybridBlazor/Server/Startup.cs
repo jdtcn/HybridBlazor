@@ -18,11 +18,14 @@ using HybridBlazor.Client;
 using HybridBlazor.Server.Data;
 using HybridBlazor.Server.Data.Models;
 using HybridBlazor.Server.Services;
+using Microsoft.AspNetCore.Hosting.Server.Features;
 
 namespace HybridBlazor.Server
 {
     public class Startup
     {
+        private IServerAddressesFeature serverAddressesFeature;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -119,10 +122,25 @@ namespace HybridBlazor.Server
             services.AddTransient(sp =>
             {
                 var handler = sp.GetService<HttpClientHandler>();
-                var navManager = sp.GetService<NavigationManager>();
+                var webHost = sp.GetService<IWebHostEnvironment>();
 
-                return new HttpClient(handler) { BaseAddress = new Uri(navManager.BaseUri) };
+                if (serverAddressesFeature?.Addresses == null
+                 || serverAddressesFeature.Addresses.Count == 0)
+                {
+                    return new HttpClient(handler);
+                }
+
+                var insideIis = Environment.GetEnvironmentVariable("APP_POOL_ID") is string;
+
+                var address = serverAddressesFeature.Addresses
+                    .FirstOrDefault(a => a.StartsWith($"http{(insideIis ? "s" : "")}:"))
+                    ?? serverAddressesFeature.Addresses.First();
+
+                var uri = new Uri(address);
+
+                return new HttpClient(handler) { BaseAddress = new Uri($"{uri.Scheme}://localhost:{uri.Port}") };
             });
+
             services.AddScoped<IAuthService, ServerAuthService>();
             services.AddSingleton<CounterStateStorageService>();
             Client.Program.ConfigureCommonServices(services);
@@ -130,6 +148,8 @@ namespace HybridBlazor.Server
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
         {
+            serverAddressesFeature = app.ServerFeatures.Get<IServerAddressesFeature>();
+
             UpdateDatabase<ApplicationDbContext>(app);
 
             if (env.IsDevelopment())

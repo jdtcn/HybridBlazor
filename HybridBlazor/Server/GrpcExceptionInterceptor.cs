@@ -36,6 +36,21 @@ namespace HybridBlazor.Server
             }
         }
 
+        public override async Task ServerStreamingServerHandler<TRequest, TResponse>(
+            TRequest request,
+            IServerStreamWriter<TResponse> responseStream,
+            ServerCallContext context,
+            ServerStreamingServerMethod<TRequest, TResponse> continuation)
+        {
+            try
+            {
+                await continuation(request, responseStream, context);
+            }
+            catch (TaskCanceledException)
+            {
+                // Ignore this exception
+            }
+        }
 
         private void LogCall(ServerCallContext context)
         {

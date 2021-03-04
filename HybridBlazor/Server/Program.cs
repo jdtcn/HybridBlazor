@@ -23,6 +23,9 @@ namespace HybridBlazor.Server
                         });
                     });
 
+                    webBuilder.UseIIS();
+                    webBuilder.UseIISIntegration();
+
                     webBuilder.UseStartup<Startup>();
                 });
     }

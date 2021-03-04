@@ -64,7 +64,11 @@ namespace HybridBlazor.Server
         private static void SetProtocols(object target, HttpProtocols protocols)
         {
             var field = target.GetType().GetField("_endpointDefaultProtocols", BindingFlags.Instance | BindingFlags.NonPublic);
-            if (field == null) throw new RuntimeBinderException("Couldn't bind to Kestrel's _endpointDefaultProtocols field");
+            if (field == null)
+            {
+                // Ignore for https
+                return;
+            }
             field.SetValue(target, protocols);
         }
 
