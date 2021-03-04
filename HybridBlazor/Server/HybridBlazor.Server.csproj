@@ -2,6 +2,9 @@
 
 	<PropertyGroup>
 		<TargetFramework>net6.0</TargetFramework>
+		<UserSecretsId>85766b9e-5fbd-4d78-88f0-973f7af64cee</UserSecretsId>
+		<DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
+		<DockerfileContext>..\..</DockerfileContext>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -10,6 +13,7 @@
 		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.0-preview.1.21102.2" />
 		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-preview.1.21102.2" />
 		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.1.21102.12" />
+		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
 		<PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.147" />
 		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
