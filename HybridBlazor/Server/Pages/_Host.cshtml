@@ -30,15 +30,12 @@
         </wasm-app>
     }
 
-<script>
+    <script>
         (function () {
             var setCookie = function (name, value) {
-                var expires = "";
-                //if (days) {
-                    var date = new Date();
-                    date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
-                    expires = "; expires=" + date.toUTCString();
-                //}
+                var date = new Date();
+                date.setTime(date.getTime() + (365 * 24 * 60 * 60 * 1000));
+                var expires = "; expires=" + date.toUTCString();
                 document.cookie = name + "=" + (value || "") + expires + "; path=/";
             }
 
@@ -62,7 +59,7 @@
             window.getHubridInstanceId = function () { return hubridInstanceId; }
             window.getHybridType = function () { return '@HybridOptions.Value.HybridType'; }
         })();
-</script>
+    </script>
 
     @if (HybridOptions.Value.HybridType == HybridBlazor.Server.HybridType.ServerSide)
     {

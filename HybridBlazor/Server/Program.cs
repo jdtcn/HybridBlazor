@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Hosting;
+﻿using Microsoft.AspNetCore.Connections;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Hosting;
 
 namespace HybridBlazor.Server
@@ -14,6 +15,14 @@ namespace HybridBlazor.Server
             Host.CreateDefaultBuilder(args)
                 .ConfigureWebHostDefaults(webBuilder =>
                 {
+                    webBuilder.UseKestrel(server =>
+                    {
+                        server.ConfigureEndpointDefaults(listenOptions =>
+                        {
+                            listenOptions.Use(next => new ClearTextHttpMultiplexingMiddleware(next).OnConnectAsync);
+                        });
+                    });
+
                     webBuilder.UseStartup<Startup>();
                 });
     }
