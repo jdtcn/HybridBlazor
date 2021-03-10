@@ -174,6 +174,28 @@ namespace HybridBlazor.Server
 
             app.UseGrpcWeb(new GrpcWebOptions { DefaultEnabled = true });
 
+            app.Use((context, next) =>
+            {
+                var idCookiaName = "hubrid-instance-id";
+                if (!context.Request.Cookies.Any(c => c.Key == idCookiaName))
+                {
+                    var idCookieOptions = new CookieOptions
+                    {
+                        Path = "/",
+                        Secure = true,
+                        HttpOnly = true,
+                        IsEssential = true,
+                        SameSite = SameSiteMode.Strict,
+                        Expires = DateTime.Now.AddYears(100),
+                    };
+                    context.Response.Cookies.Append(
+                        key: idCookiaName,
+                        value: Guid.NewGuid().ToString(),
+                        options: idCookieOptions);
+                }
+                return next();
+            });
+
             app.UseEndpoints(endpoints =>
             {
                 endpoints.MapGrpcService<Services.WeatherForecastService>();
