@@ -1,17 +1,20 @@
 ﻿@page "_Host"
 @addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 @using HybridBlazor.Client
+@using HybridBlazor.Server
 @using Microsoft.Extensions.Options
 
-@inject IOptions<HybridBlazor.Server.HybridOptions> HybridOptions
-
+@inject IOptions<HybridOptions> HybridOptions
+@{
+    var hybridType = HybridOptions?.Value?.HybridType ?? HybridType.HybridOnNavigation; 
+}
 <!DOCTYPE html>
 <html>
 
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>HybridBlazor: @HybridOptions.Value.HybridType</title>
+    <title>HybridBlazor: @hybridType</title>
     <base href="/" />
     <link href="css/app.css" rel="stylesheet" />
     <link href="css/bootstrap/bootstrap.min.css" rel="stylesheet" />
@@ -20,7 +23,7 @@
 
 <body>
 
-    @if (HybridOptions.Value.HybridType.ToString().StartsWith("Hybrid"))
+    @if (hybridType.ToString().StartsWith("Hybrid"))
     {
         <srvr-app>
             <component type="typeof(App)" render-mode="ServerPrerendered" />
@@ -61,14 +64,14 @@
         })();
     </script>
 
-    @if (HybridOptions.Value.HybridType == HybridBlazor.Server.HybridType.ServerSide)
+    @if (hybridType == HybridType.ServerSide)
     {
         <app>
             <component type="typeof(App)" render-mode="ServerPrerendered" />
         </app>
         <script src="_framework/blazor.server.js"></script>
     }
-    else if (HybridOptions.Value.HybridType == HybridBlazor.Server.HybridType.WebAssembly)
+    else if (hybridType == HybridType.WebAssembly)
     {
         <app>
             <component type="typeof(App)" render-mode="WebAssemblyPrerendered">

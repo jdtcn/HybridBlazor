@@ -81,7 +81,6 @@
 
     LoginRequest loginModel { get; set; } = new LoginRequest();
     string error { get; set; }
-    bool loading = false;
 
     protected override void OnInitialized()
     {
@@ -95,7 +94,6 @@
 
     async Task OnSubmit()
     {
-        loading = true;
         await Task.Yield();
 
         error = null;
@@ -116,7 +114,6 @@
         {
             error = ex.Message;
         }
-        loading = false;
     }
 
     public NameValueCollection QueryString()

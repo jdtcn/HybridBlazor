@@ -122,7 +122,6 @@ namespace HybridBlazor.Server
             services.AddTransient(sp =>
             {
                 var handler = sp.GetService<HttpClientHandler>();
-                var webHost = sp.GetService<IWebHostEnvironment>();
 
                 if (serverAddressesFeature?.Addresses == null
                  || serverAddressesFeature.Addresses.Count == 0)
@@ -130,10 +129,10 @@ namespace HybridBlazor.Server
                     return new HttpClient(handler);
                 }
 
-                var insideIis = Environment.GetEnvironmentVariable("APP_POOL_ID") is string;
+                var insideIIS = Environment.GetEnvironmentVariable("APP_POOL_ID") is string;
 
                 var address = serverAddressesFeature.Addresses
-                    .FirstOrDefault(a => a.StartsWith($"http{(insideIis ? "s" : "")}:"))
+                    .FirstOrDefault(a => a.StartsWith($"http{(insideIIS ? "s" : "")}:"))
                     ?? serverAddressesFeature.Addresses.First();
 
                 var uri = new Uri(address);

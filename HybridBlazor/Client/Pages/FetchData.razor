@@ -39,7 +39,6 @@ else
 @code {
     [Inject] IWeatherForecastService ForecastService { get; set; }
 
-    public Task getForecastTask;
     private List<WeatherForecast> Forecasts { get; set; }
 
     protected override async Task OnInitializedAsync()
