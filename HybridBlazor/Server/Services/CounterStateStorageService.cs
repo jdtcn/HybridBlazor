@@ -9,6 +9,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using HybridBlazor.Shared;
 using HybridBlazor.Server.Data;
+using HybridBlazor.Server.Data.Models;
 
 namespace HybridBlazor.Server.Services
 {
@@ -27,54 +28,70 @@ namespace HybridBlazor.Server.Services
         {
             var userId = GetCurrentUserId();
 
-            var context = serviceProvider.CreateScope().ServiceProvider.GetService<ApplicationDbContext>();
-            var user = context.Users.FirstOrDefault(u => u.Id == userId);
-            var counter = user?.Counter;
-            if (counter == null) counter = context.Counters.FirstOrDefault(c => c.AnonymousId == userId);
-            if (counter == null)
-            {
-                counter = new Data.Models.Counter { AnonymousId = userId, User = user };
-                context.Add(counter);
-                context.SaveChanges();
-            }
+            var counter = GetSetPersistedCounterState();
 
-            if (!States.ContainsKey(userId))
+            lock (this)
             {
-                States[userId] = new BehaviorSubject<CounterState>(new CounterState { Count = counter.Count });
+                if (!States.ContainsKey(userId))
+                {
+                    States[userId] = new BehaviorSubject<CounterState>(
+                        new CounterState
+                        {
+                            Count = counter.Count
+                        });
+                }
             }
 
             return States[userId];
         }
 
-
         public Task SetCounterState(CounterState state)
         {
             var userId = GetCurrentUserId();
 
-            if (States.ContainsKey(userId))
+            lock (this)
             {
-                States[userId].OnNext(state);
-            }
-            else
-            {
-                States[userId] = new BehaviorSubject<CounterState>(state);
-            }
-
-            var context = serviceProvider.CreateScope().ServiceProvider.GetService<ApplicationDbContext>();
-            var user = context?.Users.FirstOrDefault(u => u.Id == userId);
-            var counter = user?.Counter;
-            if (counter == null) counter = context.Counters.FirstOrDefault(c => c.AnonymousId == userId);
-            if (counter == null)
-            {
-                counter = new Data.Models.Counter { AnonymousId = userId, User = user };
-                context.Add(counter);
-            }
-            else
-            {
-                counter.Count = state.Count;
+                if (States.ContainsKey(userId))
+                {
+                    States[userId].OnNext(state);
+                }
+                else
+                {
+                    States[userId] = new BehaviorSubject<CounterState>(state);
+                }
             }
 
-            return context.SaveChangesAsync();
+            GetSetPersistedCounterState(state.Count);
+
+            return Task.CompletedTask;
+        }
+
+        private Counter GetSetPersistedCounterState(int? newState = null)
+        {
+            var userId = GetCurrentUserId();
+
+            lock (this)
+            {
+                using var scope = serviceProvider.CreateScope();
+                var context = scope.ServiceProvider.GetService<ApplicationDbContext>();
+                var user = context.Users.FirstOrDefault(u => u.Id == userId);
+                var counter = user?.Counter;
+                if (counter == null) counter = context.Counters.FirstOrDefault(c => c.AnonymousId == userId);
+                if (counter == null)
+                {
+                    counter = new Counter { AnonymousId = userId, User = user };
+                    context.Add(counter);
+                    context.SaveChanges();
+                }
+
+                if (newState.HasValue)
+                {
+                    counter.Count = newState.Value;
+                    context.SaveChanges();
+                }
+
+                return counter;
+            }
         }
 
         private string GetCurrentUserId()
