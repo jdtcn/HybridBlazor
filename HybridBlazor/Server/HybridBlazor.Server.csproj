@@ -8,18 +8,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Grpc.AspNetCore.Web" Version="2.35.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0-preview.1.21103.6" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.1.21102.12" />
+		<PackageReference Include="Grpc.AspNetCore.Web" Version="2.36.0-pre1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Proxies" Version="6.0.0-preview.2.21154.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="6.0.0-preview.2.21154.2" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.2.21154.6" />
 		<PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.14" />
 		<PackageReference Include="protobuf-net.Grpc.AspNetCore" Version="1.0.147" />
-		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.1.21102.2" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.1.21102.2">
+		<PackageReference Include="Microsoft.AspNetCore.Diagnostics.EntityFrameworkCore" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Identity.EntityFrameworkCore" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.AspNetCore.ApiAuthorization.IdentityServer" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="6.0.0-preview.2.21154.2" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0-preview.2.21154.2">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

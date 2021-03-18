@@ -5,18 +5,18 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.0.0-preview1" />
-		<PackageReference Include="Grpc.Net.Client" Version="2.35.0" />
-		<PackageReference Include="Grpc.Net.Client.Web" Version="2.35.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-preview.1.21103.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.1.21103.6" />
-		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.1.21103.6" PrivateAssets="all" />
-		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.1.21102.12" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-preview.1.21103.6" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.1.21102.12" />
-		<PackageReference Include="System.Net.Http.Json" Version="6.0.0-preview.1.21102.12" />
+		<PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="10.0.0-preview2" />
+		<PackageReference Include="Grpc.Net.Client" Version="2.36.0-pre1" />
+		<PackageReference Include="Grpc.Net.Client.Web" Version="2.36.0-pre1" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.Authorization" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.DevServer" Version="6.0.0-preview.2.21154.6" PrivateAssets="all" />
+		<PackageReference Include="Microsoft.Extensions.Http" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.2.21154.6" />
+		<PackageReference Include="System.Net.Http.Json" Version="6.0.0-preview.2.21154.6" />
 		<PackageReference Include="protobuf-net.Grpc" Version="1.0.147" />
-		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0-preview.1.21102.12" />
+		<PackageReference Include="System.Diagnostics.DiagnosticSource" Version="6.0.0-preview.2.21154.6" />
 		<PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
 		<PackageReference Include="System.Reactive" Version="5.0.0" />
 		<PackageReference Include="System.Linq.Async" Version="5.0.0" />
