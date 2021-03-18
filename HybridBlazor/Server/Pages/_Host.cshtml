@@ -27,6 +27,7 @@
     {
         <srvr-app>
             <component type="typeof(App)" render-mode="ServerPrerendered" />
+            <persist-component-state />
         </srvr-app>
         <wasm-app style="display: none;">
             <component type="typeof(App)" render-mode="WebAssembly">
@@ -42,6 +43,7 @@
     {
         <app>
             <component type="typeof(App)" render-mode="ServerPrerendered" />
+            <persist-component-state />
         </app>
         <script src="_framework/blazor.server.js"></script>
     }

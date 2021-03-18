@@ -1,7 +1,11 @@
 ﻿@page "/fetchdata"
 
 @using Microsoft.AspNetCore.Authorization
+@using System.Text.Json
+
 @attribute [Authorize]
+
+@implements IDisposable
 
 <h1>Weather forecast</h1>
 
@@ -38,11 +42,36 @@ else
 
 @code {
     [Inject] IWeatherForecastService ForecastService { get; set; }
+    [Inject] ComponentApplicationState ApplicationState { get; set; }
 
     private List<WeatherForecast> Forecasts { get; set; }
 
     protected override async Task OnInitializedAsync()
     {
-        Forecasts = await ForecastService.GetForecastAsync();
+        ApplicationState.OnPersisting += PersistForecasts;
+        if (!ApplicationState.TryRedeemPersistedState("fetchdata", out var data))
+        {
+            Forecasts = await ForecastService.GetForecastAsync();
+        }
+        else
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                PropertyNameCaseInsensitive = true,
+            };
+            Forecasts = JsonSerializer.Deserialize<List<WeatherForecast>>(data, options);
+        }
+    }
+
+    private Task PersistForecasts()
+    {
+        ApplicationState.PersistAsJson("fetchdata", Forecasts);
+        return Task.CompletedTask;
+    }
+
+    void IDisposable.Dispose()
+    {
+        ApplicationState.OnPersisting -= PersistForecasts;
     }
 }
