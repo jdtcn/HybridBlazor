@@ -5,10 +5,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-		<PackageReference Include="FluentValidation" Version="10.2.3" />
-		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-preview.5.21301.17" />
-		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-preview.5.21301.5" />
-		<PackageReference Include="System.ServiceModel.Primitives" Version="4.8.1" />
+		<PackageReference Include="FluentValidation" Version="10.3.3" />
+		<PackageReference Include="Microsoft.Extensions.Localization" Version="6.0.0-rc.1.21452.15" />
+		<PackageReference Include="Microsoft.Extensions.Logging.Abstractions" Version="6.0.0-rc.1.21451.13" />
+		<PackageReference Include="System.ServiceModel.Primitives" Version="4.9.0-rc1.21431.2" />
 		<PackageReference Include="protobuf-net.Grpc" Version="1.0.152" />
 	</ItemGroup>
 
