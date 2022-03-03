@@ -3,6 +3,6 @@
 
     protected override void OnInitialized()
     {
-        Navigation.NavigateTo($"login?returnUrl={Uri.EscapeDataString("/" + Navigation.ToBaseRelativePath(Navigation.Uri))}");
+        Navigation.NavigateTo($"login?returnUrl={Uri.EscapeDataString("/" + Navigation.ToBaseRelativePath(Navigation.Uri))}", false, true);
     }
 }

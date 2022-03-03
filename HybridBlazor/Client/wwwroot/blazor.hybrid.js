@@ -116,8 +116,11 @@
                 window.BlazorServer._internal.forceCloseConnection();
 
                 window.Blazor._internal.navigationManager.navigateTo = wasmNavigateTo;
+                window.addEventListener('popstate', () => {
+                    wasmNavigateTo(window.location.href, false, true);
+                });
 
-                wasmNavigateTo(location, false, false);
+                wasmNavigateTo(location, false, true);
 
                 wasmApp.style.display = "block";
                 srvrApp.style.display = "none";
